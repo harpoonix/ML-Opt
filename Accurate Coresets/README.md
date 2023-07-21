@@ -54,7 +54,7 @@ Even for the case that $X = \mathbb{R}^d$ and where $P$ is contained on a line $
 Let us look at a more advanced problem now. Let's say this time, instead of minimising the distance to the farthest point, we are interested in common welfare, and are instead minimising the average distance between points in input space and query location.
 
 To this end, let $P ⊆ \mathbb{R}$ be a set of $|P | = n$ numbers, $X = \mathbb{R}, f (p, x) = (p − x)^2$ , and $\text{loss}(v) = \frac{1}{n} \sum_{i}v_i$ for every $v = (v_1 ,\cdots, v_n ) ∈ \mathbb{R}^n$.
-The solution to this is pretty straightforward. The mean of the points minimises this loss. All we need is to store the (coreset) $C = \displaystyle \left\{\frac{1}{n}\sum_{p \in P} p^2, \frac{1}{n}\sum_{p \in P}p \right\}$ which consists of two numbers. Using a preprocessing of $O(n)$, we can compute the loss for any query location, by defining a new function $h : \mathcal{Pairs}(\mathbb{R}) \times \mathbb{R} → \mathbb{R}$ where $$h(\{a, b\} , x) = a + x^2 − 2xb$$
+The solution to this is pretty straightforward. The mean of the points minimises this loss. All we need is to store the (coreset) $`C = \displaystyle \left\{\frac{1}{n}\sum_{p \in P} p^2, \frac{1}{n}\sum_{p \in P}p \right\}`$ which consists of two numbers. Using a preprocessing of $O(n)$, we can compute the loss for any query location, by defining a new function $h : \mathcal{Pairs}(\mathbb{R}) \times \mathbb{R} → \mathbb{R}$ where $$h(\{a, b\} , x) = a + x^2 − 2xb$$
 Hence, $h(C, x) = f_{\text{loss}} (P, x)$ for every $x ∈ \mathbb{R}$. 
 This can be extended to a weighted set $P \subseteq \mathbb{R}^d$ and $w : P \rightarrow \mathbb{R}$. In this case too, a pre-computed coreset consisting of second (the variance), first (the mean) and zeroth moments of $p$ with a new loss function over triplets in $\mathbb{R}^d$.
 
@@ -65,17 +65,23 @@ For every $p ∈ P$ , let $\hat{p} = (p^T \quad| \quad ||p||^2 \quad| 1)^T$ be a
 This subset, $\hat{C}$ is obtained by the Gram Schmidt Orthonormalisation procedure on the set of vectors $\hat{P}$. This technique essentially gives a new orthogonal basis to the space spanned by the set.
 
 Let $C = \{p ∈ P\ |\ p̂ ∈ \hat{C}\}$, and let $u : C → \mathbb{R}$ such that $u(p) = \hat{u}(\hat{p})$ for every $p ∈ C$. We
-now have that $$\left(\begin{array}{c}
+now have that
+```math
+\begin{pmatrix}
 \sum_{p \in C} u(p) p \\
 \sum_{p \in C} u(p)\|p\|^2 \\
 \sum_{p \in C} u(p)
-\end{array}\right)=\sum_{\hat{p} \in \mathcal{C}} \hat{u}(\hat{p}) \hat{p}=\sum_{\hat{p} \in \hat{P}} w(p) \hat{p}=\left(\begin{array}{c}
+\end{pmatrix}=\sum_{\hat{p} \in \mathcal{C}} \hat{u}(\hat{p}) \hat{p}=\sum_{\hat{p} \in \hat{P}} w(p) \hat{p}=\begin{pmatrix}
 \sum_{p \in P} w(p) p \\
 \sum_{p \in P} w(p)\|p\|^2 \\
 \sum_{p \in P} w(p)
-\end{array}\right)$$
+\end{pmatrix}
+```
 
 where the first equality is by the definitions of $C$ and $u$.
-The last equality is by the definition of $\hat{P}$ . Therefore, for every $x ∈ \mathbb{R}^d$ , we have that $$\begin{aligned} f_{\text {loss }}((C, u), x)=\sum_{p \in C} u(p)\|p-x\|^2 & =\sum_{p \in C} u(p)\|p\|^2+\|x\|^2 \cdot \sum_{p \in C} u(p)-2 x^T \sum_{p \in C} u(p) p \\ & =\sum_{p \in P} w(p)\|p\|^2+\|x\|^2 \cdot \sum_{p \in P} w(p)-2 x^T \sum_{p \in P} w(p) p \\ & =f_{\text {loss }}((P, w), x)\end{aligned}$$
+The last equality is by the definition of $\hat{P}$ . Therefore, for every $x ∈ \mathbb{R}^d$ , we have that 
+```math
+\begin{aligned} f_{\text {loss }}((C, u), x)=\sum_{p \in C} u(p)\|p-x\|^2 & =\sum_{p \in C} u(p)\|p\|^2+\|x\|^2 \cdot \sum_{p \in C} u(p)-2 x^T \sum_{p \in C} u(p) p \\ & =\sum_{p \in P} w(p)\|p\|^2+\|x\|^2 \cdot \sum_{p \in P} w(p)-2 x^T \sum_{p \in P} w(p) p \\ & =f_{\text {loss }}((P, w), x)\end{aligned}
+```
 Unlike in the previous case, here the coreset is simply a scaled (weighted) subset of $P$ and the cost function $f_{loss}$ is the same as for the input.
 
